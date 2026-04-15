@@ -271,27 +271,6 @@ log-anomaly-detector/
 
 ---
 
-## What to Say in an Interview
-
-> "The system ingests logs from four different formats — Apache/Nginx, Linux
-> syslog, Windows Event Log, and a generic JSON/key-value parser. It
-> normalises everything into a common schema and then runs four independent
-> detection engines. The pattern engine uses 17 regex signatures covering
-> everything from Log4Shell to slow-burn brute force, each mapped to a MITRE
-> ATT&CK technique. The statistical engine applies Z-score analysis to detect
-> outliers in request rates, error rates, and data transfer volumes. The ML
-> engine uses scikit-learn's Isolation Forest — an unsupervised algorithm —
-> so it doesn't need labelled training data; it learns what normal looks like
-> and flags deviations. The temporal engine specifically targets attacks that
-> are only visible in timing — off-hours admin activity, impossible travel
-> between IPs, and low-rate brute force spread over hours to evade rate
-> limiters. Findings are then aggregated, deduplicated, and given a composite
-> score that's boosted if the same source is flagged by multiple detectors.
-> The output is a REST API plus a full HTML report with MITRE tags and raw
-> evidence."
-
----
-
 ## Limitations
 
 - **No persistent database** — results are in-memory only. Restart = data gone.
